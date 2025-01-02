@@ -14,6 +14,7 @@ python-slugify = "8.0.4"
 pydantic-settings = "2.5.2"
 fastapi-pagination = "0.12.27"
 cachetools = "5.5.0"
+typer = "^0.15.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -39,15 +40,14 @@ httpx = "0.27.2"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poerty.scripts]
-app = "src.main:app"
+[tool.poetry.scripts]
+app = 'src.run:app'
 
 [tool.poetry-dynamic-versioning]
 version-file = "src/__init__.py"
 tag = true
 enable = true
 vcs = "git"
-style = "semver"
 commit = true
 
 [tool.flake8]
