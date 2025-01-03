@@ -1,0 +1,36 @@
+version: '3.9'
+
+x-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "50m"
+    max-file: "3"
+
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        command: poetry run app
+        volumes:
+            - "./src/:/app/src"
+        depends_on:
+            - mongo
+        env_file:
+            - ./dotenv/app.env
+        logging: *logging
+
+    mongo:
+        image: mongo:7.0.12
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: "${MONGO_USER}"
+            MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD}"
+        volumes:
+            - apikey_data:/data/db
+        logging: *logging
+
+volumes:
+    apikey_data:
