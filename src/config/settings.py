@@ -39,7 +39,7 @@ class ApiKeyHubSettings(BaseSettings):
         default=False, alias="USE_LIVE_CLIENT", description="Use live client for the application"
     )
     TOKEN_SECRET_HEX_LENGTH: Optional[int] = Field(
-        default=64, alias="TOKEN_SECRET_HEX_LENGTH", description="Length of the token secret in hex"
+        default=32, alias="TOKEN_SECRET_HEX_LENGTH", description="Length of the token secret in hex"
     )
     SECRET_KEY_HASHED: Optional[str] = Field(
         ...,
