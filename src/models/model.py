@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import pymongo
-from beanie import after_event, before_event, Document, Insert, Update
+from beanie import Document, PydanticObjectId
 from pydantic import Field
 
 from src.config import settings
@@ -11,7 +11,10 @@ from .schema import APIKeyBaseSchema
 
 
 class APIKeyDocument(Document, APIKeyBaseSchema):
-    api_key: Optional[str] = Field(None, description="The API key to be used for authentication purposes (read-only)")
+    api_key: str = Field(..., description="The API key to be used for authentication purposes (read-only)")
+    hashed_key: str = Field(
+        ..., description="The hashed version of the API key to be stored in the database (read-only)"
+    )
     is_active: Optional[bool] = Field(default=True, description="Whether the API key is active or not (read-only)")
     last_used_at: Optional[datetime] = Field(
         default=datetime.now(timezone.utc), description="The date and time the API key was last used (read-only)"
@@ -22,6 +25,9 @@ class APIKeyDocument(Document, APIKeyBaseSchema):
     )
     created_at: Optional[datetime] = Field(
         default=datetime.now(timezone.utc), description="The date and time the API key was created (read-only)"
+    )
+    updated_at: Optional[datetime] = Field(
+        default=datetime.now(timezone.utc), description="The date and time the API key was last updated (read-only)"
     )
 
     class Settings:
@@ -35,10 +41,10 @@ class APIKeyDocument(Document, APIKeyBaseSchema):
             )
         ]
 
-    @before_event([Insert, Update])
-    async def generate_api_key(self, **kwargs):
-        hashed_key = generate_api_key(self.user_id)
-        print("Generated API Key :: ", hashed_key)
-        if not await self.find_one({"api_key": hashed_key}).exists():
-            self.api_key = hashed_key
-        self.api_key = hashed_key
+    @classmethod
+    async def regenerate_api_key(cls, id: PydanticObjectId, user_id: PydanticObjectId):
+        api_key, hashed_key = generate_api_key(user_id=user_id)
+        updated = await cls.find_one({"_id": id}).update_one({"$set": {"api_key": api_key, "hashed_key": hashed_key}})
+        if not updated.acknowledged:
+            raise ValueError("API Key not found")
+        return await cls.find_one({"_id": id})
