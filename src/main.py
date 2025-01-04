@@ -7,7 +7,9 @@ from fastapi_pagination import add_pagination
 from src import models
 from src.common.config import shutdown_db_client, startup_db_client
 from src.config import settings
+from src.common.helpers.exception import setup_exception_handlers
 from .endpoint import router as apikey_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -48,4 +50,7 @@ app.include_router(apikey_router)
 
 
 # Add pagination support to the app
-add_pagination(app)
+add_pagination(parent=app)
+
+# Add exception handlers to the app
+setup_exception_handlers(app=app)
