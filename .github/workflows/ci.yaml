@@ -2,6 +2,7 @@ name: CI for Telemed Appointment API Service
 
 on:
   push:
+    tags: '[0-9]+.[0-9]+.[0-9]+**'
     branches:
       - "main"
       - "develop"

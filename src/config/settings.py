@@ -14,14 +14,12 @@ class ApiKeyHubSettings(BaseSettings):
     APP_LOG_LEVEL: Optional[str] = Field(default="debug", alias="APP_LOG_LEVEL", description="Log level of the application")
     APP_ACCESS_LOG: Optional[bool] = Field(default=True, alias="APP_ACCESS_LOG", description="Enable/Disable access log")
     APP_DEFAULT_PORT: Optional[int] = Field(default=8800, alias="APP_DEFAULT_PORT", description="Default port of the application")
-    ALLOW_ANONYM_PUSH: Optional[bool] = Field(
-        default=False, alias="ALLOW_ANONYM_PUSH", description="Allow anonymous push to the config"
-    )
+    USE_TRACK_ACTIVITY_LOGS: Optional[bool] = Field(default=False, alias="USE_TRACK_ACTIVITY_LOGS")
     APP_LOOP: Optional[str] = Field(
         default="uvloop", alias="APP_LOOP", description="Type of loop to use: none, auto, asyncio or uvloop"
     )
     API_KEY_PREFIX: Optional[str] = Field(
-        default="fhs",
+        default="st",
         alias="API_KEY_PREFIX",
         description="Prefix for the API key to be used for authentication purposes",
     )
@@ -38,6 +36,8 @@ class ApiKeyHubSettings(BaseSettings):
     )
 
     # APP MODEL NAME
+    ROLE_PRESTATAIRE: Optional[str] = Field(default="prestataire", alias="ROLE_PRESTATAIRE")
+    ROLE_SUPER_ADMIN: Optional[str] = Field(default="super-administrateur", alias="ROLE_SUPER_ADMIN")
     APIKEY_HUB_COLLECTION: str = Field(..., alias="APIKEY_HUB_COLLECTION", description="Name of the model")
     APP_DESC_DB_COLLECTION: str = Field(..., alias="APP_DESC_DB_COLLECTION", description="Collection for app description")
     PERMS_DB_COLLECTION: str = Field(..., alias="PERMS_DB_COLLECTION", description="Collection for permissions")
@@ -47,17 +47,24 @@ class ApiKeyHubSettings(BaseSettings):
     MONGODB_URI: str = Field(..., alias="MONGODB_URI", description="URI of the MongoDB config")
 
     # VALIDATE TOKEN AND CHECK ACCESS ENDPOINT
-    API_AUTH_URL_BASE: Optional[str] = Field(
+    API_AUTH_URL_BASE: str = Field(
         default="http://localhost:9000", alias="API_AUTH_URL_BASE", description="Base URL of the authentication service"
     )
-    API_AUTH_CHECK_ACCESS_ENDPOINT: Optional[str] = Field(
+    API_AUTH_CHECK_ACCESS_ENDPOINT: str = Field(
         default="/check-access", alias="API_AUTH_CHECK_ACCESS_ENDPOINT", description="Endpoint to check access"
     )
-    API_AUTH_CHECK_VALIDATE_ACCESS_TOKEN: Optional[str] = Field(
+    API_AUTH_CHECK_VALIDATE_ACCESS_TOKEN: str = Field(
         default="/check-validate-access-token",
         alias="API_AUTH_CHECK_VALIDATE_ACCESS_TOKEN",
         description="Endpoint to validate token",
     )
+    API_TRAILHUB_ENDPOINT: str = Field(
+        default="/logs",
+        alias="API_TRAILHUB_ENDPOINT",
+        description="Endpoint to activity logs",
+    )
+    API_AUTH_READ_USER_ENDPOINT: str = Field("/users", alias="API_AUTH_READ_USER_ENDPOINT")
+    API_AUTH_ROLES_URL_ENDPOINT: str = Field("/roles", alias="API_AUTH_ROLES_URL_ENDPOINT")
 
 
 @lru_cache
