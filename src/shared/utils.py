@@ -23,8 +23,8 @@ def generate_api_key(user_id: Union[str, PydanticObjectId]) -> tuple[str, str]:
     final_api_key = f"{prefix}{raw_key}"
 
     # Créer la version hashée pour stockage
-    secret_bytes = settings.SECRET_KEY_HASHED.encode('utf-8')
-    hmac_obj = HMAC(key=secret_bytes, msg=raw_key.encode('utf-8'), digestmod=hashlib.sha256)
+    secret_bytes = settings.SECRET_KEY_HASHED.encode("utf-8")
+    hmac_obj = HMAC(key=secret_bytes, msg=raw_key.encode("utf-8"), digestmod=hashlib.sha256)
     hashed_key = hmac_obj.hexdigest()
 
     return final_api_key, hashed_key
@@ -39,7 +39,7 @@ def parse_api_key(key: str):
     if not key.startswith(prefix):
         return False, None, None
 
-    raw_key = key[len(prefix):]
+    raw_key = key[len(prefix) :]
     expected_length = settings.TOKEN_SECRET_HEX_LENGTH * 2
 
     if len(raw_key) <= expected_length:
@@ -59,8 +59,8 @@ def verify_api_key(provided_key: str, stored_hash: str):
     if not is_valid:
         return False, None
 
-    secret_bytes = settings.SECRET_KEY_HASHED.encode('utf-8')
-    calculated_hash = HMAC(key=secret_bytes, msg=raw_key.encode('utf-8'), digestmod=hashlib.sha256).hexdigest()
+    secret_bytes = settings.SECRET_KEY_HASHED.encode("utf-8")
+    calculated_hash = HMAC(key=secret_bytes, msg=raw_key.encode("utf-8"), digestmod=hashlib.sha256).hexdigest()
 
     return compare_digest(calculated_hash, stored_hash), user_id
 
