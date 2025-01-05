@@ -12,9 +12,7 @@ from .schema import APIKeyBaseSchema
 
 class APIKeyDocument(Document, APIKeyBaseSchema):
     api_key: str = Field(..., description="The API key to be used for authentication purposes (read-only)")
-    hashed_key: str = Field(
-        ..., description="The hashed version of the API key to be stored in the database (read-only)"
-    )
+    hashed_key: str = Field(..., description="The hashed version of the API key to be stored in the database (read-only)")
     is_active: Optional[bool] = Field(default=True, description="Whether the API key is active or not (read-only)")
     last_used_at: Optional[datetime] = Field(
         default=datetime.now(timezone.utc), description="The date and time the API key was last used (read-only)"

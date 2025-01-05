@@ -7,23 +7,13 @@ from pydantic_settings import BaseSettings
 
 class ApiKeyHubSettings(BaseSettings):
     # APP CONFIG
-    APP_TITLE: Optional[str] = Field(
-        default="UNSTA: ApiKey HUB", alias="APP_TITLE", description="Title of the application"
-    )
+    APP_TITLE: Optional[str] = Field(default="UNSTA: ApiKey HUB", alias="APP_TITLE", description="Title of the application")
     APP_NAME: Optional[str] = Field(default="apikeys-hub", alias="APP_NAME", description="Name of the application")
-    APP_HOSTNAME: Optional[str] = Field(
-        default="0.0.0.0", alias="APP_HOSTNAME", description="Hostname of the application"
-    )
+    APP_HOSTNAME: Optional[str] = Field(default="0.0.0.0", alias="APP_HOSTNAME", description="Hostname of the application")
     APP_RELOAD: Optional[bool] = Field(default=True, alias="APP_RELOAD", description="Enable/Disable auto-reload")
-    APP_LOG_LEVEL: Optional[str] = Field(
-        default="debug", alias="APP_LOG_LEVEL", description="Log level of the application"
-    )
-    APP_ACCESS_LOG: Optional[bool] = Field(
-        default=True, alias="APP_ACCESS_LOG", description="Enable/Disable access log"
-    )
-    APP_DEFAULT_PORT: Optional[int] = Field(
-        default=8800, alias="APP_DEFAULT_PORT", description="Default port of the application"
-    )
+    APP_LOG_LEVEL: Optional[str] = Field(default="debug", alias="APP_LOG_LEVEL", description="Log level of the application")
+    APP_ACCESS_LOG: Optional[bool] = Field(default=True, alias="APP_ACCESS_LOG", description="Enable/Disable access log")
+    APP_DEFAULT_PORT: Optional[int] = Field(default=8800, alias="APP_DEFAULT_PORT", description="Default port of the application")
     ALLOW_ANONYM_PUSH: Optional[bool] = Field(
         default=False, alias="ALLOW_ANONYM_PUSH", description="Allow anonymous push to the config"
     )
@@ -49,9 +39,7 @@ class ApiKeyHubSettings(BaseSettings):
 
     # APP MODEL NAME
     APIKEY_HUB_COLLECTION: str = Field(..., alias="APIKEY_HUB_COLLECTION", description="Name of the model")
-    APP_DESC_DB_COLLECTION: str = Field(
-        ..., alias="APP_DESC_DB_COLLECTION", description="Collection for app description"
-    )
+    APP_DESC_DB_COLLECTION: str = Field(..., alias="APP_DESC_DB_COLLECTION", description="Collection for app description")
     PERMS_DB_COLLECTION: str = Field(..., alias="PERMS_DB_COLLECTION", description="Collection for permissions")
 
     # DATABASE CONFIG

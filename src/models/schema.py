@@ -14,9 +14,5 @@ class APIKeyFilterSchema(BaseModel):
     last_used_at: Optional[datetime] = Field(
         None, title="Last Used At", description="The date and time the API key was last used"
     )
-    expires_at: Optional[datetime] = Field(
-        None, title="Expires At", description="The date and time the API key will expire"
-    )
-    created_at: Optional[datetime] = Field(
-        None, title="Created At", description="The date and time the API key was created"
-    )
+    expires_at: Optional[datetime] = Field(None, title="Expires At", description="The date and time the API key will expire")
+    created_at: Optional[datetime] = Field(None, title="Created At", description="The date and time the API key was created")

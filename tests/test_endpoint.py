@@ -159,9 +159,7 @@ async def test_activate_or_deactivate_apikey_uses_cases(http_client_api, fake_ap
     assert non_existent_id_resp.json()["message_error"] == "Document not found"
 
     # CASE 4: Update API Key by invalid action
-    invalid_action_resp = await http_client_api.put(
-        f"/keys/{response['_id']}/action", params={"action": "invalid-action"}
-    )
+    invalid_action_resp = await http_client_api.put(f"/keys/{response['_id']}/action", params={"action": "invalid-action"})
     assert invalid_action_resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY, invalid_action_resp.text
     assert invalid_action_resp.json()["code_error"] == "app/unprocessable-entity"
 
