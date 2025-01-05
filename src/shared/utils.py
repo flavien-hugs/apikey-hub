@@ -39,7 +39,7 @@ def parse_api_key(key: str):
     if not key.startswith(prefix):
         return False, None, None
 
-    raw_key = key[len(prefix) :]
+    raw_key = key[len(prefix) :]  # noqa: E203
     expected_length = settings.TOKEN_SECRET_HEX_LENGTH * 2
 
     if len(raw_key) <= expected_length:
