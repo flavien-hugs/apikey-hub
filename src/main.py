@@ -29,18 +29,18 @@ app: FastAPI = FastAPI(
     lifespan=lifespan,
     title=settings.APP_TITLE,
     description="A simple API key manager for developers and their projects.",
-    docs_url="/apikeys-hub/docs",
-    redoc_url="/apikeys-hub/redoc",
-    openapi_url="/apikeys-hub/openapi.json",
+    docs_url="/apikeys/docs",
+    redoc_url="/apikeys/redoc",
+    openapi_url="/apikeys/openapi.json",
 )
 
 
 @app.get("/", include_in_schema=False)
 async def read_root():
-    return RedirectResponse(url="/apikeys-hub/docs")
+    return RedirectResponse(url="/apikeys/docs")
 
 
-@app.get("/apikeys-hub/@ping", tags=["DEFAULT"], summary="Check if server is available")
+@app.get("/apikeys/@ping", tags=["DEFAULT"], summary="Check if server is available")
 async def ping():
     return {"message": "pong !"}
 

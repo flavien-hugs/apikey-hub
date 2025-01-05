@@ -4,7 +4,7 @@ from typing import Literal, Optional
 from beanie import PydanticObjectId
 from fastapi import APIRouter, Body, Depends, Header, HTTPException, Query, status
 from fastapi_pagination.ext.beanie import paginate
-from pymongo import DESCENDING
+from pymongo import DESCENDING, ASCENDING
 
 from src.common.helpers.pagination import customize_page
 from src.common.helpers.utils import SortEnum
@@ -17,6 +17,8 @@ router = APIRouter(prefix="/keys", tags=["API KEYS"])
 @router.post(
     "",
     response_model=APIKeyDocument,
+    response_model_by_alias=True,
+    response_model_exclude={"hashed_key"},
     summary="Create new API Key (Soft Create)",
     status_code=status.HTTP_201_CREATED,
 )
@@ -29,17 +31,19 @@ async def create(payload: APIKeyBaseSchema = Body(...)):
 @router.get(
     "",
     response_model=customize_page(APIKeyDocument),
+    response_model_by_alias=True,
+    response_model_exclude={"hashed_key"},
     summary="Get all API Keys (Soft Read)",
     status_code=status.HTTP_200_OK,
 )
 async def all(
-        query: APIKeyFilterSchema = Depends(APIKeyFilterSchema),
-        sort: Optional[SortEnum] = Query(default=SortEnum.DESC, description="Sort order"),
+    query: APIKeyFilterSchema = Depends(APIKeyFilterSchema),
+    sort: Optional[SortEnum] = Query(default=SortEnum.DESC, description="Sort order"),
 ):
     search = query.model_dump(exclude_none=True)
 
     if query.user_id:
-        search["user_id"] = PydanticObjectId(query.user_id)
+        search["user_id"] = query.user_id
     if query.is_active:
         search["is_active"] = query.is_active
     if query.last_used_at:
@@ -57,6 +61,8 @@ async def all(
 @router.get(
     "/{id}",
     response_model=APIKeyDocument,
+    response_model_by_alias=True,
+    response_model_exclude={"hashed_key"},
     summary="Get API Key by ID (Soft Read)",
     status_code=status.HTTP_200_OK,
 )
@@ -67,10 +73,12 @@ async def read(id: PydanticObjectId):
 @router.put(
     "/{id}",
     response_model=APIKeyDocument,
+    response_model_by_alias=True,
+    response_model_exclude={"hashed_key"},
     summary="Regenerate API Key by ID (Soft Update)",
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def update(id: PydanticObjectId):
+async def regenerate_apikey(id: PydanticObjectId):
     doc = await find_document(document=APIKeyDocument, query={"_id": id}, status_code=status.HTTP_400_BAD_REQUEST)
     return await doc.regenerate_api_key(id=id, user_id=doc.user_id)
 
@@ -78,6 +86,8 @@ async def update(id: PydanticObjectId):
 @router.put(
     "/{id}/action",
     response_model=APIKeyDocument,
+    response_model_by_alias=True,
+    response_model_exclude={"hashed_key"},
     summary="Activate or deactivate API Key by ID (Soft Update)",
     status_code=status.HTTP_202_ACCEPTED,
 )
@@ -121,7 +131,7 @@ async def verify_apikey(apikey: str = Header(..., description="API Key to verify
 
         result = {"verified": is_valid and str(doc.user_id) == str(extracted_user_id)}
 
-    except HTTPException as exc:
+    except HTTPException:
         return {"verified": False}
 
     return result
